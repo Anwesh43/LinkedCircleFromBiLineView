@@ -3,12 +3,13 @@ package com.anwesh.uiprojects.linkedcirclefrombilineview
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.WindowManager
+import com.anwesh.uiprojects.circlefrombilineview.CircleFromBiLineView
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        CircleFromBiLineView.create(this)
         fullScreen()
     }
 }
