@@ -221,4 +221,13 @@ class CircleFromBiLineView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : CircleFromBiLineView {
+            val view : CircleFromBiLineView = CircleFromBiLineView(activity)
+            activity.setContentView(view)
+            return view 
+        }
+    }
 }
