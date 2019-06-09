@@ -23,6 +23,8 @@ val foreColor : Int = Color.parseColor("#283593")
 val backColor : Int = Color.parseColor("#BDBDBD")
 val sweepDeg : Float = 360f
 val rFactor : Float = 3f
+val offsetFactor : Float = 2f
+val rotDeg : Float = 90f
 
 fun Int.inverse() : Float = 1f / this
 fun Float.scaleFactor() : Float = Math.floor(this / scDiv).toFloat()
@@ -33,3 +35,36 @@ fun Float.mirrorValue(a : Int, b : Int) : Float {
 fun Float.updateValue(dir : Float, a : Int, b : Int) : Float = mirrorValue(a, b) * dir * scGap
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
 fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n)) * n
+
+fun Canvas.drawCircleFromLine(i : Int, sc : Float, size : Float, paint : Paint) {
+    val sf : Float = 1f - 2 * i
+    val sci : Float = sc.divideScale(i, lines)
+    val sci1 : Float = sci.divideScale(0, 2)
+    val sci2 : Float = sci.divideScale(1, 2)
+    val r : Float = size / rFactor
+    save()
+    translate(0f, -(size / offsetFactor) * sf * sci1)
+    drawLine(0f, -size / offsetFactor, 0f, size / offsetFactor, paint)
+    translate(sf * size / offsetFactor, 0f)
+    drawArc(RectF(-r, -r, r, r), 0f, sweepDeg * sci2, true, paint)
+    restore()
+}
+
+fun Canvas.drawCFBLNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = h / (nodes + 1)
+    val size : Float = gap / sizeFactor
+    val sc1 : Float = scale.divideScale(0, 2)
+    val sc2 : Float = scale.divideScale(1, 2)
+    paint.color = foreColor
+    paint.strokeWidth = Math.min(w, h) / strokeFactor
+    paint.strokeCap = Paint.Cap.ROUND
+    save()
+    translate(w / 2, gap * (i + 1))
+    rotate(rotDeg * sc2)
+    for (j in 0..(lines - 1)) {
+        drawCircleFromLine(j, sc1, size, paint)
+    }
+    restore()
+}
