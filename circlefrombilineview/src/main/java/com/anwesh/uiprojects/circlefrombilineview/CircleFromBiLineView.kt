@@ -176,7 +176,7 @@ class CircleFromBiLineView(ctx : Context) : View(ctx) {
         }
     }
 
-    data class CircleFromBiLineView(var i : Int) {
+    data class CircleFromBiLine(var i : Int) {
 
         private val root : CFBLNode = CFBLNode(0)
         private var curr : CFBLNode = root
@@ -195,6 +195,28 @@ class CircleFromBiLineView(ctx : Context) : View(ctx) {
                 curr = curr.getNext(dir) {
                     dir *= -1
                 }
+            }
+        }
+    }
+
+    data class Renderer(var view : CircleFromBiLineView) {
+
+        private val cfbl : CircleFromBiLine = CircleFromBiLine(0)
+        private val animator : Animator = Animator(view)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            cfbl.draw(canvas, paint)
+            animator.animate {
+                cfbl.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            cfbl.startUpdating {
+                animator.start()
             }
         }
     }
