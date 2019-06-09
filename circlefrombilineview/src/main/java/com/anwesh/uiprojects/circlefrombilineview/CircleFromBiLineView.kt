@@ -175,4 +175,27 @@ class CircleFromBiLineView(ctx : Context) : View(ctx) {
             return this
         }
     }
+
+    data class CircleFromBiLineView(var i : Int) {
+
+        private val root : CFBLNode = CFBLNode(0)
+        private var curr : CFBLNode = root
+        private var dir : Int = 1
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            root.draw(canvas, paint)
+        }
+
+        fun startUpdating(cb : () -> Unit) {
+            curr.startUpdating(cb)
+        }
+
+        fun update(cb : (Int, Float) -> Unit) {
+            curr.update {i, scl ->
+                curr = curr.getNext(dir) {
+                    dir *= -1
+                }
+            }
+        }
+    }
 }
